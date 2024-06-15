@@ -35,9 +35,15 @@ final class BlockInvMenuGraphic implements PositionedInvMenuGraphic{
 	}
 
 	public function remove(Player $player) : void{
-		$network = $player->getNetworkSession();
-		foreach($player->getWorld()->createBlockUpdatePackets([$this->position]) as $packet){
-			$network->sendDataPacket($packet);
+	        $network = $player->getNetworkSession();
+	        $world = $player->getWorld();
+	        $typeConverter = TypeConverter::getInstance();
+	
+	        $blockPositions = [$this->position];
+	        $packets = $world->createBlockUpdatePackets($typeConverter, $blockPositions);
+	
+	        foreach($packets as $packet){
+	            $network->sendDataPacket($packet);
 		}
 	}
 
